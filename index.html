@@ -3,300 +3,624 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog do Leonardo | 3° B Exatas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
+    <title>Blog do 3° B Exatas - Leonardo D. Ferreira</title>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-            color: #f8fafc;
-            min-height: 100vh;
+        /* ==================== RESET E VARIÁVEIS ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* STREAMING_CHUNK:Definindo estilos de animação e efeitos Hover... -->
-        /* Efeito Hover nos Cards de Artigo */
-        .blog-card {
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-radius: 16px;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* ==================== CABEÇALHO ANIMADO ==================== */
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.75rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(to right, #60a5fa, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ==================== CONTAINER PRINCIPAL ==================== */
+        main {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* ==================== CARDS DOS ARTIGOS ==================== */
+        article {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
                         box-shadow 0.4s ease, 
                         border-color 0.4s ease;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
         }
 
-        .blog-card:hover {
+        /* Delays sequenciais na entrada dos cards */
+        article:nth-child(1) { animation-delay: 0.2s; }
+        article:nth-child(2) { animation-delay: 0.35s; }
+        article:nth-child(3) { animation-delay: 0.5s; }
+        article:nth-child(4) { animation-delay: 0.65s; }
+        article:nth-child(5) { animation-delay: 0.8s; }
+        article:nth-child(6) { animation-delay: 0.95s; }
+
+        /* Efeito de HOVER nos Cards */
+        article:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.3),
-                        0 10px 15px -5px rgba(0, 0, 0, 0.4);
-            border-color: rgba(129, 140, 248, 0.6);
+            box-shadow: var(--shadow-hover);
+            border-color: #cbd5e1;
         }
 
-        /* Efeito de Zoom e Brilho nas Imagens */
-        .card-image-container {
+        /* ==================== IMAGENS COM ZOOM NO HOVER ==================== */
+        .img-container {
+            width: 100%;
+            height: 200px;
             overflow: hidden;
-            border-radius: 12px;
             position: relative;
+            background-color: #e2e8f0;
         }
 
-        .card-image {
-            transition: transform 0.6s ease, filter 0.5s ease;
-            filter: brightness(0.9) contrast(1.05);
+        article img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
         }
 
-        .blog-card:hover .card-image {
+        article:hover img {
             transform: scale(1.08);
-            filter: brightness(1.1) contrast(1.1) saturate(1.2);
+            filter: brightness(1.05);
         }
 
-        /* Efeito Hover e Animações nos Botões de Reação */
-        .reaction-btn {
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* ==================== CONTEÚDO DOS CARDS ==================== */
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
-        .reaction-btn:hover {
-            background: rgba(99, 102, 241, 0.25);
-            border-color: rgba(129, 140, 248, 0.8);
+        article h2 {
+            font-size: 1.35rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            transition: color 0.3s ease;
+        }
+
+        article:hover h2 {
+            color: var(--primary-color);
+        }
+
+        .artigo-autor {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            display: inline-block;
+        }
+
+        .card-body p:not(.artigo-autor):not(.artigo-fonte) {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        /* ==================== BOTÕES DE REAÇÃO ==================== */
+        .reactions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        button {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 0.85rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
             transform: scale(1.12) translateY(-2px);
-            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
-        .reaction-btn:active {
+        button:active {
             transform: scale(0.95);
         }
 
-        .reaction-emoji {
-            display: inline-block;
-            transition: transform 0.4s ease;
+        /* ==================== SEÇÃO DA NEWSLETTER ==================== */
+        .newsletter-section {
+            max-width: 1100px;
+            margin: 4rem auto 1rem auto;
+            padding: 0 1.5rem;
         }
 
-        .reaction-btn:hover .reaction-emoji {
-            transform: rotate(15deg) scale(1.25);
+        .newsletter-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #334155;
         }
 
-        /* Animação ao Clicar no Botão */
-        @keyframes pulse-click {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
+        .newsletter-content {
+            max-width: 500px;
+            z-index: 2;
         }
 
-        .animate-pop {
-            animation: pulse-click 0.3s ease-in-out;
+        .newsletter-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .newsletter-content p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .newsletter-input {
+            flex-grow: 1;
+            padding: 0.85rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .newsletter-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+        }
+
+        .newsletter-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .newsletter-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ==================== CLUB PENGUIN ANIMADO ==================== */
+        .penguin-wrapper {
+            position: relative;
+            width: 160px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 2;
+        }
+
+        .penguin {
+            width: 120px;
+            height: 150px;
+            position: relative;
+            animation: penguinDance 0.8s ease-in-out infinite alternate;
+            transform-origin: bottom center;
+        }
+
+        /* Corpo */
+        .penguin-body {
+            width: 100px;
+            height: 130px;
+            background-color: #1e293b;
+            border-radius: 50px 50px 40px 40px;
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            border: 3px solid #000;
+        }
+
+        /* Barriga */
+        .penguin-belly {
+            width: 68px;
+            height: 85px;
+            background-color: #ffffff;
+            border-radius: 40px 40px 30px 30px;
+            position: absolute;
+            left: 16px;
+            bottom: 8px;
+        }
+
+        /* Olhos */
+        .penguin-eyes {
+            position: absolute;
+            top: 25px;
+            left: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .eye {
+            width: 18px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #000;
+            position: relative;
+        }
+
+        .pupil {
+            width: 8px;
+            height: 10px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            right: 3px;
+        }
+
+        /* Bico */
+        .penguin-beak {
+            width: 26px;
+            height: 16px;
+            background-color: #f97316;
+            border: 2px solid #000;
+            border-radius: 4px 4px 12px 12px;
+            position: absolute;
+            top: 45px;
+            left: 37px;
+        }
+
+        /* Cachecol Vermelho */
+        .penguin-scarf {
+            width: 80px;
+            height: 16px;
+            background-color: #ef4444;
+            border: 2px solid #000;
+            border-radius: 8px;
+            position: absolute;
+            top: 58px;
+            left: 10px;
+            z-index: 3;
+        }
+
+        /* Nadadeiras / Braços */
+        .flipper {
+            width: 25px;
+            height: 55px;
+            background-color: #1e293b;
+            border: 3px solid #000;
+            border-radius: 20px;
+            position: absolute;
+            top: 55px;
+        }
+
+        .flipper-left {
+            left: -8px;
+            transform-origin: top right;
+            animation: flipperLeftDance 0.8s ease-in-out infinite alternate;
+        }
+
+        .flipper-right {
+            right: -8px;
+            transform-origin: top left;
+            animation: flipperRightDance 0.8s ease-in-out infinite alternate;
+        }
+
+        /* Pés */
+        .feet {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        .foot {
+            width: 32px;
+            height: 16px;
+            background-color: #f97316;
+            border: 2px solid #000;
+            border-radius: 12px 12px 4px 4px;
+        }
+
+        /* ==================== ANIMAÇÕES KEYFRAMES ==================== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dança do Pinguim */
+        @keyframes penguinDance {
+            0% {
+                transform: rotate(-8deg) translateY(0);
+            }
+            100% {
+                transform: rotate(8deg) translateY(-12px);
+            }
+        }
+
+        @keyframes flipperLeftDance {
+            0% {
+                transform: rotate(30deg);
+            }
+            100% {
+                transform: rotate(-60deg);
+            }
+        }
+
+        @keyframes flipperRightDance {
+            0% {
+                transform: rotate(-60deg);
+            }
+            100% {
+                transform: rotate(30deg);
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .newsletter-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .newsletter-form {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
 
-    <div class="max-w-6xl mx-auto">
-        <header class="text-center py-12 px-6 mb-12 rounded-3xl bg-slate-900/80 border border-slate-700/50 shadow-2xl backdrop-blur-md relative overflow-hidden">
-            <div class="absolute -top-24 -left-24 w-60 h-60 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <header>
+        <h1>Blog pessoal do Leonardo D. ferreira da turma do 3° B - Exatas</h1>
+        <p>Olá! Sou o Léo, estudo na escola Branca Da Mota Fernandes e jogo RPG</p>
+    </header>
 
-            <span class="inline-block px-4 py-1.5 mb-4 text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-950/80 border border-indigo-800/50 rounded-full">
-                🎓 Escola Branca Da Mota Fernandes
-            </span>
-            <h1 class="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mb-4 leading-tight">
-                Blog Pessoal do Leonardo D. Ferreira
-            </h1>
-            <p class="text-slate-300 text-lg max-w-2xl mx-auto font-light">
-                Olá, sou o <span class="text-indigo-400 font-semibold">Léo</span>! Aluno da turma do <span class="underline decoration-indigo-500 font-medium">3° B - Exatas</span>, apaixonado por exatas e jogador de RPG nas horas vagas. 🎲✨
-            </p>
-        </header>
-
-        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            <!-- Card 1: Festa Junina -->
-            <article class="blog-card rounded-2xl p-5 flex flex-col justify-between">
-                <div>
-                    <div class="card-image-container mb-4 h-48">
-                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80" alt="Festa Junina" class="card-image w-full h-full object-cover">
-                    </div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-pink-400 bg-pink-950/50 px-2.5 py-1 rounded-md border border-pink-800/40">
-                        Variedade
-                    </span>
-                    <h2 class="text-2xl font-bold mt-3 mb-2 text-white">Festa Junina 🍿</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        Várias danças de turmas diferentes e atrações incríveis, tanto alimentares com comidas típicas quanto brincadeiras divertidas!
-                    </p>
+    <main>
+        <article>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500" alt="Festa Junina">
+            </div>
+            <div class="card-body">
+                <h2>Festa junina</h2>
+                <span class="artigo-autor">Variedade</span>
+                <p>Várias danças de turmas diferentes e atrações tanto alimentares quanto brincadeiras.</p>
+                <div class="reactions">
+                    <button onclick="addReaction(this)">🍿 <span>0</span></button>
+                    <button onclick="addReaction(this)">🔥 <span>0</span></button>
                 </div>
-                
-                <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                    <span class="text-xs text-slate-400">Interaja com a publicação:</span>
-                    <div class="flex gap-2">
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🍿</span> <span class="count">0</span>
-                        </button>
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🔥</span> <span class="count">0</span>
-                        </button>
-                    </div>
-                </div>
-            </article>
+            </div>
+        </article>
 
-            <!-- Card 2: Evento de Halloween -->
-            <article class="blog-card rounded-2xl p-5 flex flex-col justify-between">
-                <div>
-                    <div class="card-image-container mb-4 h-48">
-                        <img src="https://images.unsplash.com/photo-1509557965875-b88c97052f0e?w=600&auto=format&fit=crop&q=80" alt="Halloween" class="card-image w-full h-full object-cover">
-                    </div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-950/50 px-2.5 py-1 rounded-md border border-purple-800/40">
-                        Evento de Outubro
-                    </span>
-                    <h2 class="text-2xl font-bold mt-3 mb-2 text-white">Evento de Halloween 🎃</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        Fazemos um super evento de fantasias na escola, onde ocorrem desfiles criativos, gincanas e muita diversão entre as turmas.
-                    </p>
+        <article>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1509557965875-b88c97052f0e?w=500" alt="Halloween">
+            </div>
+            <div class="card-body">
+                <h2>Evento de halloween</h2>
+                <span class="artigo-autor">Evento de Outubro</span>
+                <p>Fazemos um evento da escola de fantasias, onde ocorrem desfiles e gincanas divertidas.</p>
+                <div class="reactions">
+                    <button onclick="addReaction(this)">🎃 <span>0</span></button>
+                    <button onclick="addReaction(this)">🎭 <span>0</span></button>
                 </div>
+            </div>
+        </article>
 
-                <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                    <span class="text-xs text-slate-400">Interaja com a publicação:</span>
-                    <div class="flex gap-2">
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🎃</span> <span class="count">0</span>
-                        </button>
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🎭</span> <span class="count">0</span>
-                        </button>
-                    </div>
+        <article>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500" alt="Lanches">
+            </div>
+            <div class="card-body">
+                <h2>Lanches diferentes</h2>
+                <span class="artigo-autor">Em datas especiais</span>
+                <p>Em alguns dias de provas ou momentos diferentes, o dia pode ter um lanche especial.</p>
+                <div class="reactions">
+                    <button onclick="addReaction(this)">🍇 <span>0</span></button>
+                    <button onclick="addReaction(this)">🍪 <span>0</span></button>
                 </div>
-            </article>
+            </div>
+        </article>
 
-            <!-- Card 3: Lanches Diferentes -->
-            <article class="blog-card rounded-2xl p-5 flex flex-col justify-between">
-                <div>
-                    <div class="card-image-container mb-4 h-48">
-                        <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&auto=format&fit=crop&q=80" alt="Lanches Especial" class="card-image w-full h-full object-cover">
-                    </div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-950/50 px-2.5 py-1 rounded-md border border-amber-800/40">
-                        Datas Especiais
-                    </span>
-                    <h2 class="text-2xl font-bold mt-3 mb-2 text-white">Lanches Diferentes 🍪</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        Em alguns dias especiais, semanas de prova ou momentos festivos, a escola prepara um merenda diferenciada e deliciosa.
-                    </p>
+        <article>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500" alt="Professores">
+            </div>
+            <div class="card-body">
+                <h2>Professores atenciosos</h2>
+                <span class="artigo-autor">Bom ensino e ajuda</span>
+                <p>Muitos professores ajudam bastante nas dificuldades e cooperam com métodos efetivos.</p>
+                <div class="reactions">
+                    <button onclick="addReaction(this)">🚸 <span>0</span></button>
+                    <button onclick="addReaction(this)">👩‍🏫 <span>0</span></button>
                 </div>
+            </div>
+        </article>
 
-                <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                    <span class="text-xs text-slate-400">Interaja com a publicação:</span>
-                    <div class="flex gap-2">
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🍇</span> <span class="count">0</span>
-                        </button>
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🍪</span> <span class="count">0</span>
-                        </button>
-                    </div>
+        <article>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=500" alt="Sala de Ciências">
+            </div>
+            <div class="card-body">
+                <h2>Sala de ciências</h2>
+                <span class="artigo-autor">Salas completas</span>
+                <p>Uma sala com vários espécimes, amostras preparadas e um microscópio completo.</p>
+                <div class="reactions">
+                    <button onclick="addReaction(this)">🔬 <span>0</span></button>
+                    <button onclick="addReaction(this)">🦠 <span>0</span></button>
                 </div>
-            </article>
+            </div>
+        </article>
 
-            <!-- Card 4: Professores Atenciosos -->
-            <article class="blog-card rounded-2xl p-5 flex flex-col justify-between">
-                <div>
-                    <div class="card-image-container mb-4 h-48">
-                        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" alt="Professores" class="card-image w-full h-full object-cover">
-                    </div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/50 px-2.5 py-1 rounded-md border border-emerald-800/40">
-                        Bom Ensino
-                    </span>
-                    <h2 class="text-2xl font-bold mt-3 mb-2 text-white">Professores Atenciosos 👩‍🏫</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        Muitos professores ajudam bastante nas dúvidas, cooperando com métodos educacionais altamente efetivos e apoio constante.
-                    </p>
+        <article>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=500" alt="Biblioteca">
+            </div>
+            <div class="card-body">
+                <h2>Biblioteca</h2>
+                <span class="artigo-autor">Acessível</span>
+                <p>Grande variedade de livros educativos, além de jogos como o xadrez.</p>
+                <div class="reactions">
+                    <button onclick="addReaction(this)">📚 <span>0</span></button>
+                    <button onclick="addReaction(this)">♟️ <span>0</span></button>
                 </div>
+            </div>
+        </article>
+    </main>
 
-                <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                    <span class="text-xs text-slate-400">Interaja com a publicação:</span>
-                    <div class="flex gap-2">
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🚸</span> <span class="count">0</span>
-                        </button>
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">👩‍🏫</span> <span class="count">0</span>
-                        </button>
+    <!-- SEÇÃO DA NEWSLETTER COM PINGUIM DANÇARINO -->
+    <section class="newsletter-section">
+        <div class="newsletter-card">
+            <div class="newsletter-content">
+                <h3>Receba as novidades! 🚀</h3>
+                <p>Digite seu e-mail para acompanhar as próximas postagens do blog do 3° B Exatas.</p>
+                <form class="newsletter-form" onsubmit="subscribeEmail(event)">
+                    <input type="email" class="newsletter-input" placeholder="Seu melhor e-mail..." required>
+                    <button type="submit" class="newsletter-btn">Inscrever-se</button>
+                </form>
+            </div>
+
+            <!-- Pinguim do Club Penguin em Animação Continuada -->
+            <div class="penguin-wrapper">
+                <div class="penguin">
+                    <div class="flipper flipper-left"></div>
+                    <div class="flipper flipper-right"></div>
+                    <div class="penguin-body">
+                        <div class="penguin-belly"></div>
+                        <div class="penguin-eyes">
+                            <div class="eye"><div class="pupil"></div></div>
+                            <div class="eye"><div class="pupil"></div></div>
+                        </div>
+                        <div class="penguin-beak"></div>
+                        <div class="penguin-scarf"></div>
                     </div>
-                </div>
-            </article>
-
-            <!-- Card 5: Sala de Ciências -->
-            <article class="blog-card rounded-2xl p-5 flex flex-col justify-between">
-                <div>
-                    <div class="card-image-container mb-4 h-48">
-                        <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&auto=format&fit=crop&q=80" alt="Laboratório de Ciências" class="card-image w-full h-full object-cover">
-                    </div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/50 px-2.5 py-1 rounded-md border border-cyan-800/40">
-                        Laboratórios
-                    </span>
-                    <h2 class="text-2xl font-bold mt-3 mb-2 text-white">Sala de Ciências 🔬</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        Uma sala super completa com vários espécimes, amostras biológicas e microscópio para aulas práticas sensacionais!
-                    </p>
-                </div>
-
-                <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                    <span class="text-xs text-slate-400">Interaja com a publicação:</span>
-                    <div class="flex gap-2">
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🔬</span> <span class="count">0</span>
-                        </button>
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">🦠</span> <span class="count">0</span>
-                        </button>
+                    <div class="feet">
+                        <div class="foot"></div>
+                        <div class="foot"></div>
                     </div>
                 </div>
-            </article>
-
-            <!-- Card 6: Biblioteca -->
-            <article class="blog-card rounded-2xl p-5 flex flex-col justify-between">
-                <div>
-                    <div class="card-image-container mb-4 h-48">
-                        <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&auto=format&fit=crop&q=80" alt="Biblioteca" class="card-image w-full h-full object-cover">
-                    </div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/50 px-2.5 py-1 rounded-md border border-indigo-800/40">
-                        Espaço de Estudos
-                    </span>
-                    <h2 class="text-2xl font-bold mt-3 mb-2 text-white">Biblioteca 📚</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        Espaço acessível com grande variedade de livros didáticos, literatura e jogos de raciocínio como o Xadrez!
-                    </p>
-                </div>
-
-                <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                    <span class="text-xs text-slate-400">Interaja com a publicação:</span>
-                    <div class="flex gap-2">
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">📚</span> <span class="count">0</span>
-                        </button>
-                        <button onclick="incrementReaction(this)" class="reaction-btn px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-1.5 text-slate-200">
-                            <span class="reaction-emoji">♟️</span> <span class="count">0</span>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-        </main>
-
-        <!-- Rodapé -->
-        <footer class="text-center py-8 mt-16 text-slate-500 text-sm border-t border-slate-800">
-            <p>© Blog Pessoal do Leonardo - 3° B Exatas | Escola Branca Da Mota Fernandes</p>
-        </footer>
-    </div>
+            </div>
+        </div>
+    </section>
 
     <script>
-        // Função para incrementar contadores nos botões de reação
-        function incrementReaction(btn) {
-            const countSpan = btn.querySelector('.count');
+        // Função para acrescentar reações ao clicar nos botões
+        function addReaction(btn) {
+            const countSpan = btn.querySelector('span');
             let currentCount = parseInt(countSpan.textContent);
             countSpan.textContent = currentCount + 1;
+        }
 
-            // Efeito visual instantâneo de clique
-            btn.classList.add('animate-pop');
-            setTimeout(() => {
-                btn.classList.remove('animate-pop');
-            }, 300);
+        // Função para confirmação do e-mail na Newsletter
+        function subscribeEmail(event) {
+            event.preventDefault();
+            const input = event.target.querySelector('input');
+            alert(`Obrigado por se inscrever, ${input.value}! Você receberá as novidades em breve.`);
+            input.value = '';
         }
     </script>
 </body>
